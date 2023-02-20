@@ -75,6 +75,8 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 	return obj.info(os);
 }
 
+#define STUDENT_TAKE_PARAMETERS  const std::string& speciality, const std::string& group, double rating, double attendance
+#define STUDENT_GIVE_PARAMETERS  speciality, group, rating, attendance
 class Student : public Human
 {
 	std::string speciality;
@@ -216,10 +218,9 @@ public:
 	{
 		cout << "GDestructor:\t" << this << endl;
 	}
-	void info()const
+	std::ostream& info(std::ostream& os)const
 	{
-		Student::info();
-		cout << subject << endl;
+		return Student::info(os)<< " "  << subject << endl;
 	}
 };
 
@@ -252,16 +253,16 @@ void main()
 	Human* group[] =
 	{
 		new Student("Pinkman", "Jessie", 1990, 03,04, "Chemistry", "WW_220", 90, 95),
-		//new Teacher("White", "Walter", 1960, 9, 20, "Chemistry", 25),
-		//new Graduate("Schrader", "Hank", 1970, 06,07, "Criminalistic", "WW_220", 75, 80, "How to catch Heizenberg"),
+		new Teacher("White", "Walter", 1960, 9, 20, "Chemistry", 25),
+		new Graduate("Schrader", "Hank", 1970, 06,07, "Criminalistic", "WW_220", 75, 80, "How to catch Heizenberg"),
 		new Student("Vercetty", "Tomas", 1970, 05, 25, "Criminalistic", "Vice", 90, 95),
-		//new Teacher("Diaz", "Ricardo", 1960, 03,03, "Weapons distribution", 20)
+		new Teacher("Diaz", "Ricardo", 1960, 03,03, "Weapons distribution", 20)
 	};
 
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
 		//group[i]->info();
 		cout << typeid(*group[i]).name() << ":\t";
-		//cout << *group[i] << endl;
+		cout << *group[i] << endl;
 	}
 }
