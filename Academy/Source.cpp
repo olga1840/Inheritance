@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+Ôªø#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 #include<string>
 #include<ctime>
@@ -64,7 +64,7 @@ public:
 	//      Methods:
 	void info()const
 	{
-		cout << last_name << first_name << "\t" << get_age() << endl;
+		cout << last_name << " " << first_name << "\t" << get_age() << endl;
 	}
 	
 };
@@ -84,27 +84,85 @@ public:
 	{
 		return group;
 	}
-	const std::string& get_rating()const
+	double get_rating()const
 	{
 		return rating;
 	}
+	double get_attendance()const
+	{
+		return attendance;
+	}
+	void set_speciality(const std::string& speciality)
+	{
+		this->speciality = speciality;
+	}
+	void set_group(const std::string& group)
+	{
+		this->group = group;
+	}
+	void set_rating(double rating)
+	{
+		this->rating = rating;
+	}
+	void set_attendance(double attendance)
+	{
+		this->attendance = attendance;
+	}
+
+	//						Constructors:
+	Student
+	(
+		const std::string& last_name, const std::string& first_name, int year, int month, int day,
+		const std::string& speciality, const std::string& group, double rating, double attendance
+	) :Human(last_name, first_name, year, month, day)//–í—ã–∑–æ–≤ –∫–æ–Ω—Å—Ç—Ä—É–∫—Ç–æ—Ä–∞ –±–∞–∑–æ–≤–æ–≥–æ –∫–ª–∞—Å—Å–∞
+	{
+		set_speciality(speciality);
+		set_group(group);
+		set_rating(rating);
+		set_attendance(attendance);
+		cout << "SConstructor:\t" << this << endl;
+	}
+	Student(const Human& human, const std::string& speciality, const std::string& group, double rating, double attendance)
+		:Human(human)
+	{
+		set_speciality(speciality);
+		set_group(group);
+		set_rating(rating);
+		set_attendance(attendance);
+		cout << "SConstructor:\t" << this << endl;
+	}
+	~Student()
+	{
+		cout << "SDestructor:\t" << this << endl;
+	}
+	void info()const
+	{
+		Human::info();
+		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+	}
 };
+
 //#define TIME_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
 #ifdef TIME_CHECK
-	time_t t_today = time(NULL); //ÔÓÎÛ˜‡ÂÏ ÚÂÍÛ˘Û˛ ‰‡ÚÛ/‚ÂÏˇ ‚ ÙÓÏ‡ÚÂ Timestamp
+	time_t t_today = time(NULL);	//–ü–æ–ª—É—á–∞–µ–º —Ç–µ–∫—É—â–µ–µ –≤—Ä–µ–º—è –≤ —Ñ–æ—Ä–º–∞—Ç–µ Timestamp
 	cout << t_today << endl;
 	tm* tm_today = localtime(&t_today);
-	cout << tm_today->tm_year+1900<< "\t";
-	cout << tm_today->tm_mon+1 << "\t";
+	cout << tm_today->tm_year + 1900 << "\t";
+	cout << tm_today->tm_mon + 1 << "\t";
 	cout << tm_today->tm_mday << "\n";
 	cout << asctime(tm_today) << endl;
-#endif //TIME_CHECK
+#endif // TIME_CHECK
 
-	Human human("“ÛÔÂÌÍÓ", "¬‡ÒËÎËÈ", 1990, 04, 01);
+	Human human("–¢—É–ø–µ–Ω–∫–æ", "–í–∞—Å–∏–ª–∏–π", 1990, 04, 01);
 	human.info();
 
+	//Student student("–¢—É–ø–µ–Ω–∫–æ", "–í–∞—Å–∏–ª–∏–π", 1990, 04, 01, "IT", "start", 60, 30);
+	Student student(human, "IT", "start", 60, 30);
+	student.info();
+
+	student.get_birth_date();
 }
