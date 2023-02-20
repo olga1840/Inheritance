@@ -62,12 +62,16 @@ public:
 	}
 
 	//      Methods:
-	void info()const
+	virtual std::ostream& info(std::ostream& os)const
 	{
-		cout << last_name << " " << first_name << "\t" << get_age() << endl;
+		return os << last_name << " " << first_name << "\t" << get_age();
 	}
-	
 };
+
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return obj.info(os);
+}
 
 class Student : public Human
 {
@@ -135,10 +139,9 @@ public:
 	{
 		cout << "SDestructor:\t" << this << endl;
 	}
-	void info()const
+	std::ostream& info(std::ostream& os)const
 	{
-		Human::info();
-		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+		return Human::info(os)<< " " << speciality << " " << group << " " << rating << " " << attendance;
 	}
 };
 
@@ -157,12 +160,26 @@ void main()
 	cout << asctime(tm_today) << endl;
 #endif // TIME_CHECK
 
-	Human human("Тупенко", "Василий", 1990, 04, 01);
-	human.info();
+	//Human human("Тупенко", "Василий", 1990, 04, 01);
+	//human.info();
 
-	//Student student("Тупенко", "Василий", 1990, 04, 01, "IT", "start", 60, 30);
-	Student student(human, "IT", "start", 60, 30);
-	student.info();
+	////Student student("Тупенко", "Василий", 1990, 04, 01, "IT", "start", 60, 30);
+	//Student student(human, "IT", "start", 60, 30);
+	//student.info();
 
-	student.get_birth_date();
+	Human* group[] =
+	{
+		new Student("Pinkman", "Jessie", 1990, 03,04, "Chemistry", "WW_220", 90, 95),
+		//new Teacher("White", "Walter", 1960, 9, 20, "Chemistry", 25),
+		//new Graduate("Schrader", "Hank", 1970, 06,07, "Criminalistic", "WW_220", 75, 80, "How to catch Heizenberg"),
+		new Student("Vercetty", "Tomas", 1970, 05, 25, "Criminalistic", "Vice", 90, 95),
+		//new Teacher("Diaz", "Ricardo", 1960, 03,03, "Weapons distribution", 20)
+	};
+
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		//group[i]->info();
+		cout << typeid(*group[i]).name() << ":\t";
+		//cout << *group[i] << endl;
+	}
 }
