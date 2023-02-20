@@ -4,6 +4,8 @@
 #include<ctime>
 using namespace std;
 
+#define HUMAN_TAKE_PARAMETERS  const std::string& last_name, const std::string& first_name, int year, int month, int day
+#define HUMAN_GIVE_PARAMETERS  last_name, first_name, year, month, day
 
 class Human
 {
@@ -49,25 +51,33 @@ public:
 	}
 
 	//        Constructors:
-	Human(const std::string& last_name, const std::string& first_name, int year, int month, int day)
+	Human(HUMAN_TAKE_PARAMETERS)
 	{
 		set_last_name(last_name);
 		set_first_name(first_name);
 		set_birth_date(year, month, day);
 		cout << "HConstructors:\t" << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructors:\t" << endl;
 	}
 
 	//      Methods:
-	void info()const
+	virtual void info()const
 	{
 		cout << last_name << " " << first_name << "\t" << get_age() << endl;
 	}
-	
 };
+
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age();
+
+}
+
+#define STUDENT_TAKE_PARAMETERS  const std::string& speciality, const std::string& group, double rating, double attendance
+#define STUDENT_GIVE_PARAMETERS  speciality, group, rating, attendance
 
 class Student : public Human
 {
@@ -110,11 +120,8 @@ public:
 	}
 
 	//						Constructors:
-	Student
-	(
-		const std::string& last_name, const std::string& first_name, int year, int month, int day,
-		const std::string& speciality, const std::string& group, double rating, double attendance
-	) :Human(last_name, first_name, year, month, day)//Вызов конструктора базового класса
+	Student	(HUMAN_TAKE_PARAMETERS,STUDENT_TAKE_PARAMETERS) 
+		:Human(HUMAN_GIVE_PARAMETERS)//Вызов конструктора базового класса
 	{
 		set_speciality(speciality);
 		set_group(group);
@@ -142,7 +149,95 @@ public:
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Student& obj)
+{
+	return os << (Human&)obj << " " <<  obj.get_speciality() << " " << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendance() << " ";
+}
+
+#define TEACHER_TAKE_PARAMETERS  const std::string& speciality, unsigned int experience
+
+class Teacher :public Human
+{
+	std::string speciality;
+	unsigned int experience;   
+public:
+	const std::string& get_speciality()const
+	{
+		return speciality;
+	}
+	unsigned int get_experience()const
+	{
+		return experience;
+	}
+	void set_speciality(const std::string& speciality)
+	{
+		this->speciality = speciality;
+	}
+	void set_experience(unsigned int experience)
+	{
+		this->experience = experience;
+	}
+
+	//         Constructor:
+	Teacher(HUMAN_TAKE_PARAMETERS, TEACHER_TAKE_PARAMETERS) :Human(HUMAN_GIVE_PARAMETERS)
+	{
+		set_speciality(speciality);
+		set_experience(experience);
+		cout << "NConstructor:\t" << this << endl;
+	}
+	~Teacher()
+	{
+		cout << "TDestructor:\t" << this << endl;
+	}
+	
+	void info()const
+	{
+		Human::info();
+		cout << speciality << " " << experience << " лет.\n";
+	}
+};
+
+std::ostream& operator<<(std::ostream& os, const Teacher& obj)
+{
+	return os << (Human&)obj << " " << obj.get_speciality() << " " << obj.get_experience();
+}
+
+class Graduate :public Student
+{
+	std::string subject;
+public:
+	const std::string& get_subject()const
+	{
+		return subject;
+	}
+	void set_subject(const std::string& subject)
+	{
+		this->subject = subject;
+	}
+	Graduate(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, const std::string& subject)
+		:Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
+	{
+		set_subject(subject);
+		cout << "GConstructor:\t" << this << endl;
+	}
+	~Graduate()
+	{
+		cout << "GDestructor:\t" << this << endl;
+	}
+	void info()const
+	{
+		Student::info();
+		cout << subject << endl;
+	}
+};
+
+std::ostream& operator<<(std::ostream& os, const Graduate& obj)
+{
+	return os << (Human&)obj << " " << (Student&)obj << obj.get_subject();
+}
+
 //#define TIME_CHECK
+//#define INHERITANCE_CHECK
 
 void main()
 {
@@ -157,6 +252,7 @@ void main()
 	cout << asctime(tm_today) << endl;
 #endif // TIME_CHECK
 
+#ifdef INHERITANCE_CHECK
 	Human human("Тупенко", "Василий", 1990, 04, 01);
 	human.info();
 
@@ -164,5 +260,40 @@ void main()
 	Student student(human, "IT", "start", 60, 30);
 	student.info();
 
-	student.get_birth_date();
+	Teacher teacher("Einstein", "Albert", 1879, 03, 14, "Astronomy", 120);
+	teacher.info();
+
+	Graduate graduate("Abignail", "Frank", 1920, 01, 02, "Artist", "Criminal", 98, 11, "Foregry documents");
+	graduate.info();
+#endif // INHERITANCE_CHECK
+
+	Human* group[] =
+	{
+		new Student("Pinkman", "Jessie", 1990, 03,04, "Chemistry", "WW_220", 90, 95),
+		new Teacher("White", "Walter", 1960, 9, 20, "Chemistry", 25),
+		new Graduate("Schrader", "Hank", 1970, 06,07, "Criminalistic", "WW_220", 75, 80, "How to catch Heizenberg"),
+		new Student("Vercetty", "Tomas", 1970, 05, 25, "Criminalistic", "Vice", 90, 95),
+		new Teacher("Diaz", "Ricardo", 1960, 03,03, "Weapons distribution", 20)
+	};
+
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		//group[i]->info();
+		cout << typeid(*group[i]).name() << ":\t";
+		//cout << *group[i] << endl;
+
+		if(typeid(*group[i]) == typeid(Student))cout << *dynamic_cast <Student*>(group[i])<<endl;
+		
+		if (typeid(*group[i]) == typeid(Graduate))cout << *dynamic_cast <Graduate*>(group[i]) << endl;
+		
+		if (typeid(*group[i]) == typeid(Teacher))cout << *dynamic_cast <Teacher*>(group[i]) << endl;
+		cout << "\n--------------------------------------------\n";
+
+	}
+
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		delete group[i];
+	}
+
 }
