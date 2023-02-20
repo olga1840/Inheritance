@@ -4,6 +4,8 @@
 #include<ctime>
 using namespace std;
 
+#define HUMAN_TAKE_PARAMETERS  const std::string& last_name, const std::string& first_name, int year, int month, int day
+#define HUMAN_GIVE_PARAMETERS  last_name, first_name, year, month, day
 
 class Human
 {
@@ -181,10 +183,9 @@ public:
 		cout << "TDestructor:\t" << this << endl;
 	}
 
-	void info()const
+	std::ostream& info(std::ostream& os)const
 	{
-		Human::info();
-		cout << speciality << " " << experience << " лет.\n";
+		return Human::info(os) << " "  << speciality << " " << experience << " лет.\n";
 	}
 };
 
