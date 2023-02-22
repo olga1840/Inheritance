@@ -1,5 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
+#include<fstream>
 #include<string>
 #include<ctime>
 using namespace std;
@@ -275,6 +276,7 @@ void main()
 		new Student("Vercetty", "Tomas", 1970, 05, 25, "Criminalistic", "Vice", 90, 95),
 		new Teacher("Diaz", "Ricardo", 1960, 03,03, "Weapons distribution", 20)
 	};
+
 
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
