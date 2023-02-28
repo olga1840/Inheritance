@@ -1,96 +1,65 @@
 #include<iostream>
 #include<fstream>
+#include<direct.h>
 using namespace std;
 
-//#define WRITE_TO_FILE
-//#define READ_FROM_FILE
+
 
 void main()
 {
 	setlocale(LC_ALL, "");
 
-#ifdef WRITE_TO_FILE
-	char filename[_MAX_FNAME] = {};
-	cout << "Ввeдите имя файла : ";
-	cin.getline(filename, _MAX_FNAME);
-	if (strcmp(filename + strlen(filename) - 4, ".txt"))strcat_s(filename,_MAX_FNAME, ".txt");
+	const int IP_MAX_SIZE = 16;
+	const int MAC_MAX_SIZE = 18;
 
-	ofstream fout;                   //1) Создаем поток
-	fout.open(filename, std::ios_base::app);  //2) Открываем поток
-	fout << "Hello files" << endl;   //3) Пишем в поток
-	fout.close();                    //4) Закрываем поток
+	char sz_ip_buffer[IP_MAX_SIZE] = {};
+	char sz_mac_buffer[MAC_MAX_SIZE] = {};
 
-	char sz_command[_MAX_FNAME] = "notepad ";
-	strcat_s(sz_command,_MAX_FNAME, filename);
-	system(sz_command);
-#endif // WRITE_TO_FILE
 
-#ifdef READ_FROM_FILE
-	ifstream fin;
-	fin.open("File.txt");
+	std::ifstream fin("201 RAW.txt");
 	if (fin.is_open())
 	{
-		const int SIZE = 1256;
-		char sz_buffer[SIZE]{};
+		std::ofstream fout("Ready\\201.txt");
 		while (!fin.eof())
 		{
-			//fin >> sz_buffer;
-			fin.getline(sz_buffer, SIZE);
-			cout << sz_buffer << endl;
+			fin >> sz_ip_buffer >> sz_mac_buffer;
+			cout << sz_mac_buffer <<"\t" << sz_ip_buffer << endl;
+			fout << sz_mac_buffer << "\t" << sz_ip_buffer << endl;
 		}
+
+		fout.close();
+
+		fout.open("201.dhcpd");
+		fin.clear();
+		fin.seekg(0);
+
+		for (int i = 1; !fin.eof(); i++)
+		{
+			fin >> sz_ip_buffer >> sz_mac_buffer;
+			for (int i = 0; sz_mac_buffer[i]; i++)
+				if (sz_mac_buffer[i] == '-')sz_mac_buffer[i] = ':';
+			if (strlen(sz_ip_buffer) == strlen(sz_mac_buffer))continue;
+			cout << "host-" << i << "\n";
+			cout << "{\n";
+			cout << "\thardware ethernet\t" << sz_mac_buffer << ";\n";
+			cout << "\tfiexd-adress\t\t" << sz_ip_buffer << ";\n";
+			cout << "}\n";
+			cout << endl;
+
+			fout << "host-" << i << "\n";
+			fout << "{\n";
+			fout << "\thardware ethernet\t" << sz_mac_buffer << ";\n";
+			fout << "\tfiexd-adress\t\t" << sz_ip_buffer << ";\n";
+			fout << "}\n";
+			fout << endl;
+		}
+
 		fin.close();
 	}
 	else
 	{
 		std::cerr << "Error: File not found" << endl;
-		//cout - console out
-		//cerr - console error
-
 	}
-#endif // READ_FROM_FILE
-
-
-
-	char filename[_MAX_FNAME] = {};
-	//cin.getline(filename, _MAX_FNAME);
-	if (strcmp(filename + strlen(filename) - 4, "201 ready.txt"))
-		strcat_s(filename, _MAX_FNAME, "201 ready.txt");
-
-	ofstream fout("201 ready.txt");
-	
-	//fout.open(filename, std::ios_base::app);
-	fout.close();
-
-	char sz_command[_MAX_FNAME] = "notepad ";
-	strcat_s(sz_command, _MAX_FNAME, filename);
-	system(sz_command);
-
-	ifstream fin;
-	fin.open("201 RAW.txt");
-	if (fin.is_open())
-	{
-		const int IP = 16;
-		char IP_buffer[IP]{};
-		for (int i = 0; i < IP; i++)
-		{
-			fin >> IP_buffer[i];
-		}
-		const int MAC = 18;
-		char MAC_buffer[MAC]{};
-		for(int i=0; i<MAC; i++)
-		{
-			fin >> MAC_buffer[i];
-		}
-		
-		while (!fin.eof())
-		{
-			fout << MAC << " " << IP << endl;
-		}
-		fin.close();
-	}
-	else
-	{
-		std::cerr << "Error: File not found" << endl;
-		
-	}
-}
+	system("notepad 201.txt");
+	system("notepad 201.dhcpd");
+	   }
