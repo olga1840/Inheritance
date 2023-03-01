@@ -1,5 +1,7 @@
-﻿#include<iostream>
+﻿#include<Windows.h>
+#include<iostream>
 using namespace std;
+#define delimeter "______________________________________________"
 
 enum Color
 {
@@ -12,6 +14,7 @@ enum Color
 
 class Shape
 {
+protected:
 	Color color;
 public:
 	Shape(Color color) :color(color) {};
@@ -20,91 +23,113 @@ public:
 	virtual double get_area()const = 0;
 	virtual double get_perimeter()const = 0;
 	virtual void draw()const = 0;
+	virtual void info()const
+	{
+		cout << "Площадь фигуры: " << get_area() << endl;
+		cout << "Периметр фигуры: " << get_perimeter() << endl;
+		draw();
+	}
 };
 
-class Rectangle : public Shape
+class Square :public Shape
 {
+	double side;
 public:
-	double x, y;
-	void set_sides()
+	double get_side()const
 	{
-		cout << "Введите значения сторон четырехугольника x и y через пробел: ";
-		cin >> x;
-		cin >> y;
+		return side;
 	}
-	Rectangle(double x, double y) 
+	void set_side(double side)
 	{
-		this->x = x;
-		this->y = y;
+		if (side < 5)side = 5;
+		if (side > 20)side = 20;
+		this->side = side;
 	}
-	~Rectangle();
-
-		double get_area()
+	//Constructors
+	Square(double side, Color color) :Shape(color)
 	{
-		if (x != y)
-		{
-			return (x * y);
-			cout << "Площадь прямоугольника = " << x * y << endl;
-		}
-		else
-		{
-			cout << "Cтороны прямоугольника не могут быть равны!" << endl;
-		}
+		set_side(side);
+	 }
+	~Square() {}
+	double get_area()const
+	{
+		return side * side;
 	}
-	void get_perimeter()
+	double get_perimeter()const
 	{
-		if (x != y)
-		{
-			return ((x + y) * 2);
-			cout << "Периметр прямоугольника = " << (x+y)*2 << endl;
-		}
-		else
-		{
-			cout << "Cтороны прямоугольника не могут быть равны! " << endl;
-		}
+		return side * 4;
 	}
-	void drow()
+	void draw()const
 	{
-		cout << "Рисунок прямоугольника " << endl;
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, color);
+		for (int i = 0; i < side; i++)
+		{
+			for (int j = 0; j < side; j++)
+			{
+				cout << "* ";
+			}
+			cout << endl;
+		}
+		SetConsoleTextAttribute(hConsole, Color::console_default);
+	}
+	void info()const
+	{
+		cout << typeid(*this).name() << endl;
+		cout << "Длина стороны квадрата:\t" << side << endl;
+		Shape::info();
 	}
 };
-
-class Quadrate : public Rectangle
+class Rectangle :public Shape
 {
+	double side_1, side_2;
 public:
-	Quadrate(double side): Rectangle(side,side){}
-	void get_area()
+	double get_side_1()const
 	{
-		if (x = y)
-		{
-			cout << "Площадь квадрата = " << x * x << endl;
-		}
-		else
-		{
-			cout << "Cтороны квадрата долны быть равны!" << endl;
-		}
+		return side_1;
 	}
-	void get_perimeter()
+	double get_side_2()const
 	{
-		if (x = y)
-		{
-			cout << "Периметр квадрата = " << 4*x << endl;
-		}
-		else
-		{
-			cout << "Cтороны квадрата долны быть равны! " << endl;
-		}
+		return side_2;
 	}
-	void drow()
+	void set_side_1(double side_1)
 	{
-		cout << "Рисунок квадрата " << endl;
+		if (side_1 < 5)side_1 = 5;
+		if (side_1 > 20) side_1 = 20;
+		this->side_1 = side_1;
 	}
+	void set_side_2(double side_2)
+	{
+		if (side_2 < 5)side_2 = 5;
+		if (side_2 > 20) side_2 = 20;
+		this->side_2 = side_2;
+	}
+	Rectangle(double side_1, double side_2, Color color) :Shape(color)
+	{
+		set_side_1(side_1);
+		set_side_2(side_2);
+	}
+	~Rectangle() {};
+	double get_area()const override
+	{
+		return side_1 * side_2;
+	}
+	double get_perimeter()const override
+	{
+		return (side_1 + side_2) * 2;
+	}
+
+
 };
 
-
-
+/
 void main()
 {
 	setlocale(LC_ALL, "");
 
+	Square square(-100, Color::console_red);
+	square.info();
+
+	Rectangle rect(5, 12), Color::console_blue);
+	rect.info();
 }
