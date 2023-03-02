@@ -122,7 +122,7 @@ public:
 
 };
 
-/
+
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -130,6 +130,6 @@ void main()
 	Square square(-100, Color::console_red);
 	square.info();
 
-	Rectangle rect(5, 12), Color::console_blue);
+	Rectangle rect(5, 12, Color::console_blue);
 	rect.info();
 }

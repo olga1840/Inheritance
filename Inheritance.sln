@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Files", "Files\Files.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometry", "Geometry\Geometry.vcxproj", "{D276B487-E134-44F8-BA8E-0F35EB0369BD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometry2", "Geometry2\Geometry2.vcxproj", "{05308406-D161-44E3-8D2A-7B90910E7131}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{D276B487-E134-44F8-BA8E-0F35EB0369BD}.Release|x64.Build.0 = Release|x64
 		{D276B487-E134-44F8-BA8E-0F35EB0369BD}.Release|x86.ActiveCfg = Release|Win32
 		{D276B487-E134-44F8-BA8E-0F35EB0369BD}.Release|x86.Build.0 = Release|Win32
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Debug|x64.ActiveCfg = Debug|x64
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Debug|x64.Build.0 = Debug|x64
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Debug|x86.ActiveCfg = Debug|Win32
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Debug|x86.Build.0 = Debug|Win32
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Release|x64.ActiveCfg = Release|x64
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Release|x64.Build.0 = Release|x64
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Release|x86.ActiveCfg = Release|Win32
+		{05308406-D161-44E3-8D2A-7B90910E7131}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
